@@ -234,7 +234,7 @@ def normalise(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def schedule(df: pd.DataFrame, num_days: int, days_per: int) -> pd.DataFrame:
+def schedule(df: pd.DataFrame, num_days: int, days_per: int, max_per_day: int = None) -> pd.DataFrame:
     counselors = df["Name"].tolist()
     days = list(range(1, num_days + 1))
     n = len(counselors)
@@ -244,7 +244,12 @@ def schedule(df: pd.DataFrame, num_days: int, days_per: int) -> pd.DataFrame:
 
     for i in range(n):
         prob += pulp.lpSum(x[i, d] for d in days) == days_per
-
+        
+    # Daily cap: no more than max_per_day counselors off on any single day
+    if max_per_day is not None:
+        for d in days:
+            prob += pulp.lpSum(x[i, d] for i in range(n)) <= max_per_day
+            
     cabin_groups = defaultdict(list)
     for i, row in df.iterrows():
         if row["Cabin"]:
@@ -416,7 +421,7 @@ with st.sidebar:
         help="How many days the schedule spans (e.g. 5 for one week)."
     )
     days_per = st.slider("Days off per counselor", min_value=1, max_value=3, value=1)
-
+    max_per_day = st.slider("Max counselors off per day", min_value=1, max_value=15, value=6, ...)
     st.divider()
 
     st.markdown("## 📋 Template")
@@ -480,7 +485,7 @@ if df_raw is not None:
         df = normalise(df_raw)
         with st.spinner("Finding the best schedule…"):
             try:
-                result = schedule(df, num_days=num_days, days_per=days_per)
+                result = schedule(df, num_days=num_days, days_per=days_per, max_per_day=max_per_day)
             except RuntimeError as e:
                 st.error(str(e))
                 st.stop()
