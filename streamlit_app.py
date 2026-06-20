@@ -26,7 +26,7 @@ st.markdown("""
       color: #2E2E2E;
   }
 
-  #MainMenu {visibility: hidden;}
+  #MainMenu {visibility: visible;}
   footer {visibility: hidden;}
   header {visibility: hidden;}
 
