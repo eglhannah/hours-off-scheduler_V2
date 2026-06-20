@@ -28,7 +28,7 @@ st.markdown("""
 
   #MainMenu {visibility: visible;}
   footer {visibility: hidden;}
-  header {visibility: hidden;}
+  header {visibility: visible;}
 
   /* ── Header banner ── */
   .cc-header {
