@@ -155,6 +155,10 @@ st.markdown("""
       border-left: 4px solid #5C3317;
       border-radius: 8px;
       padding: 0.8rem 1rem;
+      color: #2E2E2E !important;  /* Add this line */
+  }
+  [data-testid="stMetric"] * {
+      color: #2E2E2E !important;  /* Add this to force text color on all children */
   }
 
   /* ── Footer ── */
